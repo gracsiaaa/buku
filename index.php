@@ -3,45 +3,55 @@ include 'koneksi.php';
 $query = "SELECT * FROM buku ORDER BY id DESC";
 $sql = mysqli_query($koneksi, $query);
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOK CATALOG</title>
+    <title>The Great Library</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="floating-shape shape-1"></div>
-    <div class="floating-shape shape-2"></div>
+
+    <div class="dust-container">
+        <div class="dust d1"></div>
+        <div class="dust d2"></div>
+        <div class="dust d3"></div>
+        <div class="dust d4"></div>
+    </div>
 
     <header>
-        <div class="brand">ARRUDYA</div>
-        <a href="#" class="nav-btn">CATALOG 2026</a>
+        <a href="admin/index.php" class="admin-link">Staff Login</a>
+        <div class="header-ornament">⚜</div>
+        <div class="brand">The Great Library</div>
+        <br>
+        <span class="subtitle">Est. MMXVI &bull; Archive of Forgotten Tales</span>
     </header>
 
     <div class="container">
-        <h1 class="hero-text">
-            BOOK<br><span>CATALOG</span><br>/// 2026
-        </h1>
+        <div class="gothic-divider">
+            <span class="gothic-icon">❦</span>
+        </div>
 
-        <div class="grid-catalog">
+        <div class="grid-gallery">
             <?php while ($result = mysqli_fetch_assoc($sql)): ?>
-                <a href="detail.php?id=<?php echo $result['id']; ?>" class="card-brutal">
-                    <div class="tape-label">ID_<?php echo $result['id']; ?></div>
-                    <div class="card-img-box">
-                        <?php
-                        $img = $result['gambar_cover'] ? "img/" . $result['gambar_cover'] : "https://via.placeholder.com/300x450?text=NO+IMAGE";
-                        ?>
-                        <img src="<?php echo $img; ?>" alt="Cover">
-                    </div>
-                    <div class="card-info">
-                        <div class="card-title"><?php echo $result['judul']; ?></div>
-                        <div class="meta">
-                            > AUT: <?php echo $result['penulis']; ?><br>
-                            > YR : <?php echo $result['tahun']; ?>
+                <a href="detail.php?id=<?php echo $result['id']; ?>">
+                    <div class="book-frame">
+                        <div class="img-container">
+                            <?php
+                            $img = $result['gambar_cover'] ? "img/" . $result['gambar_cover'] : "https://via.placeholder.com/300x450/111/333?text=Missing";
+                            ?>
+                            <img src="<?php echo $img; ?>" alt="Cover">
+                            <div class="view-overlay">
+                                <span class="view-text">INSPECT</span>
+                            </div>
+                        </div>
+                        <div class="plaque">
+                            <div class="book-title"><?php echo $result['judul']; ?></div>
+                            <div class="book-author">By <?php echo $result['penulis']; ?></div>
                         </div>
                     </div>
                 </a>

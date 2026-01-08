@@ -9,50 +9,56 @@ if (!$data) {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DATA: <?php echo $data['judul']; ?></title>
+    <title><?php echo $data['judul']; ?></title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="floating-shape shape-1"></div>
+    <div class="dust-container">
+        <div class="dust d1"></div>
+        <div class="dust d2"></div>
+    </div>
+
     <header>
-        <div class="brand">RENDY.PUB</div>
-        <a href="index.php" class="nav-btn">
-            < BACK</a>
+        <div class="brand" style="font-size: 2rem;">Item No. <?php echo $data['id']; ?></div>
     </header>
 
     <div class="container">
-        <div class="detail-box">
-            <?php
-            $img = $data['gambar_cover'] ? "img/" . $data['gambar_cover'] : "https://via.placeholder.com/500x700?text=NO+IMAGE";
-            ?>
-            <img src="<?php echo $img; ?>" class="detail-img">
+        <div class="detail-paper">
+            <div class="book-frame" style="height: fit-content; border-image: none;">
+                <div class="img-container" style="height: auto; filter: none;">
+                    <?php
+                    $img = $data['gambar_cover'] ? "img/" . $data['gambar_cover'] : "https://via.placeholder.com/500x700/111/333?text=No+Cover";
+                    ?>
+                    <img src="<?php echo $img; ?>" style="display: block;">
+                </div>
+            </div>
 
             <div class="detail-content">
-                <div style="background:var(--blue); color:white; display:inline-block; padding:5px 10px; font-weight:bold; margin-bottom:20px;">
-                    // SYSTEM_ID: <?php echo $data['id']; ?>
-                </div>
-                <h1 style="font-family:'Archivo Black'; font-size:3rem; line-height:1; margin-bottom:20px; text-transform:uppercase;">
-                    <?php echo $data['judul']; ?>
-                </h1>
-                <p style="border-bottom:2px solid black; padding-bottom:10px; font-weight:bold;">
-                    AUTHOR: <span style="color:var(--blue)"><?php echo $data['penulis']; ?></span>
-                </p>
-                <p style="border-bottom:2px solid black; padding-bottom:10px; font-weight:bold;">
-                    YEAR: <span style="color:var(--pink)"><?php echo $data['tahun']; ?></span>
-                </p>
-                <br>
-                <h3>SYNOPSIS_DATA:</h3>
-                <p style="line-height:1.6; text-align:justify;"><?php echo nl2br($data['sinopsis']); ?></p>
+                <h1 class="detail-title"><?php echo $data['judul']; ?></h1>
 
-                <a href="index.php" class="btn-back">
-                    << CLOSE FILE</a>
+                <p style="color: var(--maroon); margin-bottom: 20px; font-style: italic; border-left: 3px solid var(--frame-light); padding-left: 15px;">
+                    A masterpiece authored by <?php echo $data['penulis']; ?>, published in the year <?php echo $data['tahun']; ?>.
+                </p>
+
+                <div style="line-height: 1.8; text-align: justify; font-size: 1.1rem;">
+                    <?php
+                    $sinopsis = $data['sinopsis'];
+                    $firstChar = substr($sinopsis, 0, 1);
+                    $rest = substr($sinopsis, 1);
+                    ?>
+                    <span class="drop-cap"><?php echo $firstChar; ?></span>
+                    <?php echo nl2br($rest); ?>
+                </div>
+
+                <a href="index.php" class="btn-return">&larr; Return to The Gallery</a>
             </div>
         </div>
     </div>
