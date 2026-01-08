@@ -370,56 +370,91 @@ header::after {
 }
 
 /* --- DETAIL PAGE --- */
+/* --- DETAIL PAGE (READABILITY FIX) --- */
 .detail-paper {
-  background: #151515;
-  border: 1px solid #333;
-  padding: 40px;
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 50px;
-  box-shadow: 0 0 50px black;
-  position: relative;
+    background: #050505; /* Hitam Pekat Matte */
+    border: 1px solid #333;
+    padding: 50px; /* Padding lebih lega */
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    box-shadow: 0 0 100px rgba(0,0,0,0.9); /* Shadow sangat dalam */
+    position: relative;
+    z-index: 2;
 }
 
+/* Garis Hiasan Ganda */
 .detail-paper::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  border: 2px solid var(--frame-dark);
-  pointer-events: none;
+    content: "";
+    position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
+    border: 1px solid #222; /* Garis bingkai dalam halus */
+    pointer-events: none;
 }
 
 .detail-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 3rem;
-  color: var(--silver);
-  border-bottom: 1px solid var(--maroon);
-  padding-bottom: 15px;
-  margin-bottom: 20px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 3.5rem; /* Judul Sangat Besar */
+    line-height: 1;
+    color: var(--silver);
+    border-bottom: 1px solid var(--maroon);
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 0px black;
+}
+
+.detail-meta {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--gold-dust);
+    margin-bottom: 30px;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+/* INI BAGIAN PENTING UNTUK KETERBACAAN */
+.synopsis-container {
+    background: rgba(20, 20, 20, 0.5); /* Layer transparan di belakang teks */
+    padding: 30px;
+    border-left: 4px solid var(--blood); /* Aksen garis merah di kiri */
+}
+
+.synopsis-text {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.35rem; /* Font diperbesar */
+    line-height: 1.9;   /* Spasi baris lega */
+    color: #eaeaea;     /* Putih Tulang Terang (Kontras Tinggi) */
+    text-align: justify;
+    font-weight: 400;
 }
 
 .drop-cap {
-  float: left;
-  font-size: 3.5rem;
-  line-height: 0.8;
-  margin-right: 10px;
-  color: var(--maroon);
-  font-family: 'Cinzel Decorative';
+    float: left;
+    font-size: 4rem;
+    line-height: 0.7;
+    margin-right: 15px;
+    margin-top: 5px;
+    color: var(--blood); /* Huruf depan Merah Darah */
+    font-family: 'Cinzel Decorative';
+    text-shadow: 2px 2px 0px black;
 }
 
 .btn-return {
-  display: inline-block;
-  margin-top: 30px;
-  color: var(--gold-dust);
-  border-bottom: 1px solid transparent;
+    display: inline-block;
+    margin-top: 40px;
+    padding: 10px 20px;
+    border: 1px solid var(--frame-light);
+    color: var(--silver);
+    font-family: 'Cinzel Decorative', serif;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    background: black;
 }
 
 .btn-return:hover {
-  color: var(--silver);
-  border-color: var(--silver);
+    background: var(--maroon);
+    color: white;
+    border-color: var(--maroon);
+    box-shadow: 0 0 20px var(--blood);
 }
 
 @media (max-width: 768px) {
