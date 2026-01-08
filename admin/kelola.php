@@ -1,125 +1,161 @@
 <?php
-include '../koneksi.php';
+include '../koneksi.php'; // Path naik satu level
 
-// Inisialisasi variabel kosong agar tidak error saat mode Tambah
-$id_buku = '';
 $judul = '';
 $penulis = '';
 $tahun = '';
 $sinopsis = '';
 $gambar = '';
+$id_buku = '';
 
-// LOGIKA: Cek apakah ini Mode Edit? (Ada parameter 'ubah' di URL)
-if(isset($_GET['ubah'])){
+if (isset($_GET['ubah'])) {
     $id_buku = $_GET['ubah'];
-    
-    // Ambil data lama dari database
-    $query = "SELECT * FROM buku WHERE id = '$id_buku'";
-    $sql = mysqli_query($koneksi, $query);
-    $result = mysqli_fetch_assoc($sql);
-
-    // Masukkan data lama ke variabel
-    $judul = $result['judul'];
-    $penulis = $result['penulis'];
-    $tahun = $result['tahun'];
-    $sinopsis = $result['sinopsis'];
-    $gambar = $result['gambar_cover'];
+    $sql = mysqli_query($koneksi, "SELECT * FROM buku WHERE id='$id_buku'");
+    $res = mysqli_fetch_assoc($sql);
+    $judul = $res['judul'];
+    $penulis = $res['penulis'];
+    $tahun = $res['tahun'];
+    $sinopsis = $res['sinopsis'];
+    $gambar = $res['gambar_cover'];
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Kelola Buku</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>EDITOR // RENDY.PUB</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .form-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: var(--green);
+            border: 3px solid black;
+            box-shadow: 15px 15px 0 var(--blue);
+            padding: 30px;
+        }
+
+        .form-title {
+            font-family: 'Archivo Black';
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid black;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            background: black;
+            color: white;
+            width: fit-content;
+            padding: 2px 10px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid black;
+            font-family: 'Space Mono';
+            background: white;
+            font-size: 1rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            background: #fff0f5;
+            box-shadow: 5px 5px 0 var(--pink);
+        }
+
+        .btn-save {
+            width: 100%;
+            background: var(--black);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Archivo Black';
+            margin-top: 10px;
+        }
+
+        .btn-save:hover {
+            background: var(--pink);
+            color: black;
+            box-shadow: 8px 8px 0 black;
+            transform: translate(-3px, -3px);
+        }
+
+        .btn-cancel {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+        }
+
+        .btn-cancel:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="admin.php">Admin Panel</a>
+<body>
+
+    <div class="form-container">
+        <div class="form-title">
+            <?php echo isset($_GET['ubah']) ? "EDIT_DATA_MODE" : "NEW_ENTRY_MODE"; ?>
         </div>
-    </nav>
 
-    <div class="container mb-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="fas fa-edit me-2"></i>
-                            <?php 
-                                // Ubah judul form dinamis
-                                if(isset($_GET['ubah'])){ echo "Edit Data Buku"; } 
-                                else { echo "Tambah Data Buku"; } 
-                            ?>
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        
-                        <form action="proses.php" method="POST" enctype="multipart/form-data">
-                            
-                            <input type="hidden" name="id" value="<?php echo $id_buku; ?>">
-                            
-                            <?php if(isset($_GET['ubah'])): ?>
-                                <input type="hidden" name="aksi" value="edit">
-                            <?php else: ?>
-                                <input type="hidden" name="aksi" value="tambah">
-                            <?php endif; ?>
+        <form action="proses.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?php echo $id_buku; ?>">
+            <input type="hidden" name="aksi" value="<?php echo isset($_GET['ubah']) ? 'edit' : 'tambah'; ?>">
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Judul Buku</label>
-                                <input type="text" name="judul" class="form-control" value="<?php echo $judul; ?>" placeholder="Masukkan judul buku..." required>
-                            </div>
+            <div class="input-group">
+                <label class="input-label">BOOK TITLE</label>
+                <input type="text" name="judul" class="input-field" value="<?php echo $judul; ?>" required placeholder="Enter title...">
+            </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Penulis</label>
-                                    <input type="text" name="penulis" class="form-control" value="<?php echo $penulis; ?>" placeholder="Nama penulis..." required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tahun Terbit</label>
-                                    <input type="number" name="tahun" class="form-control" value="<?php echo $tahun; ?>" placeholder="Contoh: 2024" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Sinopsis</label>
-                                <textarea name="sinopsis" class="form-control" rows="5" placeholder="Tulis sinopsis singkat..." required><?php echo $sinopsis; ?></textarea>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Upload Cover</label>
-                                
-                                <?php if($gambar != ""): ?>
-                                    <div class="mb-2">
-                                        <img src="../img/<?php echo $gambar; ?>" width="100" class="img-thumbnail">
-                                        <small class="text-muted d-block">Gambar saat ini</small>
-                                    </div>
-                                <?php endif; ?>
-
-                                <input type="file" name="foto" class="form-control" accept="image/*">
-                                <small class="text-secondary">*Biarkan kosong jika tidak ingin mengganti gambar (saat edit).</small>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <a href="admin.php" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-1"></i> Batal
-                                </a>
-                                <button type="submit" class="btn btn-primary fw-bold">
-                                    <i class="fas fa-save me-1"></i> Simpan Data
-                                </button>
-                            </div>
-
-                        </form>
-                    </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="input-group">
+                    <label class="input-label">AUTHOR</label>
+                    <input type="text" name="penulis" class="input-field" value="<?php echo $penulis; ?>" required placeholder="Author name...">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">YEAR</label>
+                    <input type="number" name="tahun" class="input-field" value="<?php echo $tahun; ?>" required placeholder="2024">
                 </div>
             </div>
-        </div>
+
+            <div class="input-group">
+                <label class="input-label">SYNOPSIS</label>
+                <textarea name="sinopsis" class="input-field" rows="6" required placeholder="Type synopsis here..."><?php echo $sinopsis; ?></textarea>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">COVER IMAGE</label>
+                <?php if ($gambar) echo "<div style='margin:10px 0; border:2px solid black; display:inline-block;'><img src='../img/$gambar' width='80'></div>"; ?>
+                <input type="file" name="foto" class="input-field">
+            </div>
+
+            <button type="submit" class="btn-save">
+                <?php echo isset($_GET['ubah']) ? "UPDATE DATABASE >>" : "SAVE TO DATABASE >>"; ?>
+            </button>
+            <a href="index.php" class="btn-cancel">CANCEL / BACK</a>
+        </form>
     </div>
 
 </body>
+
 </html>

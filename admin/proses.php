@@ -1,87 +1,59 @@
 <?php
-include '../koneksi.php';
+include '../koneksi.php'; // Koneksi naik satu level
 
-// Fungsi logic Tambah Data
-if(isset($_POST['aksi'])){
-    
-    // Ambil data dari form
+if (isset($_POST['aksi'])) {
     $judul = $_POST['judul'];
     $penulis = $_POST['penulis'];
     $tahun = $_POST['tahun'];
     $sinopsis = $_POST['sinopsis'];
-    
-    // Logic Upload Gambar
+
     $foto = $_FILES['foto']['name'];
     $tmp = $_FILES['foto']['tmp_name'];
-    $fotobaru = date('dmYHis').$foto; // Rename file jadi unik (pake tanggal jam)
-    $path = "../img/".$fotobaru;
+    $fotobaru = date('dmYHis') . $foto;
 
-    // --- KONDISI 1: TAMBAH DATA ---
-    if($_POST['aksi'] == "tambah"){
+    // Perubahan PENTING: Path simpan gambar mundur satu folder (../img/)
+    $path = "../img/" . $fotobaru;
 
-        // Jika user upload foto
-        if(move_uploaded_file($tmp, $path)){
+    if ($_POST['aksi'] == "tambah") {
+        if (move_uploaded_file($tmp, $path)) {
             $query = "INSERT INTO buku VALUES(null, '$judul', '$penulis', '$tahun', '$sinopsis', '$fotobaru')";
         } else {
-            // Jika gagal upload/tidak ada foto, insert data tanpa kolom gambar (atau gambar kosong)
             $query = "INSERT INTO buku VALUES(null, '$judul', '$penulis', '$tahun', '$sinopsis', null)";
         }
+        mysqli_query($koneksi, $query);
+        header("location: index.php"); // Tetap di folder admin
 
-        $sql = mysqli_query($koneksi, $query);
-
-        if($sql){
-            header("location: admin.php"); // Balik ke halaman admin
-        } else {
-            echo "Gagal Menambah Data: " . mysqli_error($koneksi);
-        }
-
-    // --- KONDISI 2: EDIT DATA ---
-    } else if($_POST['aksi'] == "edit"){
+    } else if ($_POST['aksi'] == "edit") {
         $id = $_POST['id'];
-
-        // Cek apakah user upload foto baru?
-        if($_FILES['foto']['name'] != ""){
-            // 1. Hapus foto lama dulu biar server gak penuh
-            $queryShow = "SELECT * FROM buku WHERE id = '$id'";
+        if ($_FILES['foto']['name'] != "") {
+            $queryShow = "SELECT * FROM buku WHERE id='$id'";
             $sqlShow = mysqli_query($koneksi, $queryShow);
             $result = mysqli_fetch_assoc($sqlShow);
-            unlink("../img/".$result['gambar_cover']);
 
-            // 2. Upload foto baru
+            // Hapus gambar lama (Path juga mundur ../img/)
+            if ($result['gambar_cover']) {
+                unlink("../img/" . $result['gambar_cover']);
+            }
+
             move_uploaded_file($tmp, $path);
-
-            // 3. Update query dengan foto baru
             $query = "UPDATE buku SET judul='$judul', penulis='$penulis', tahun='$tahun', sinopsis='$sinopsis', gambar_cover='$fotobaru' WHERE id='$id'";
         } else {
-            // Jika tidak upload foto baru, update data tulisan saja
             $query = "UPDATE buku SET judul='$judul', penulis='$penulis', tahun='$tahun', sinopsis='$sinopsis' WHERE id='$id'";
         }
-
-        $sql = mysqli_query($koneksi, $query);
-        
-        if($sql){
-            header("location: admin.php");
-        } else {
-            echo "Gagal Edit Data: " . mysqli_error($koneksi);
-        }
+        mysqli_query($koneksi, $query);
+        header("location: index.php");
     }
 }
 
-// --- KONDISI 3: HAPUS DATA (Tetap dipertahankan) ---
-if(isset($_GET['hapus'])){
-    $id_buku = $_GET['hapus'];
-
-    // Hapus gambar fisik
-    $queryShow = "SELECT * FROM buku WHERE id = '$id_buku'";
-    $sqlShow = mysqli_query($koneksi, $queryShow);
+if (isset($_GET['hapus'])) {
+    $id = $_GET['hapus'];
+    $sqlShow = mysqli_query($koneksi, "SELECT * FROM buku WHERE id='$id'");
     $result = mysqli_fetch_assoc($sqlShow);
-    unlink("../img/".$result['gambar_cover']);
 
-    $query = "DELETE FROM buku WHERE id = '$id_buku'";
-    $sql = mysqli_query($koneksi, $query);
-
-    if($sql){
-        header("location: ../admin.php");
+    if ($result['gambar_cover']) {
+        unlink("../img/" . $result['gambar_cover']);
     }
+
+    mysqli_query($koneksi, "DELETE FROM buku WHERE id='$id'");
+    header("location: index.php");
 }
-?>
