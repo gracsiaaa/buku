@@ -66,7 +66,7 @@ if (!$data) {
                     </div>
                 </div>
 
-                <a href="index.php" class="btn-return">
+                <a href="katalog.php" class="btn-return">
                     &larr; Return to The Gallery
                 </a>
             </div>
